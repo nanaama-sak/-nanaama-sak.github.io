@@ -547,6 +547,25 @@ hr{border:none;border-top:1px solid var(--border);margin:1.3rem 0;}
   cursor:pointer;transition:all .15s;}
 .wv-nav-btn:hover{border-color:var(--accent);color:var(--accent);}
 
+.work-post-card{break-inside:avoid;background:var(--surface);
+  border:2px solid var(--nav-border);border-left:4px solid var(--accent);
+  margin-bottom:1rem;transition:border-color .2s;cursor:pointer;
+  display:inline-block;width:100%;}
+.work-post-card:hover{border-color:var(--accent);}
+.work-post-card-body{padding:.75rem .9rem;}
+.work-post-card-body .work-type-tag{font-size:.5rem;}
+.work-post-card-body .work-title{font-family:var(--hf);font-size:1.1rem;font-weight:800;
+  letter-spacing:-.02em;line-height:1.15;margin:.2rem 0 0;}
+.work-post-card-body .work-desc{font-size:.74rem;line-height:1.75;color:var(--muted);margin-top:.35rem;}
+.work-post-read{display:inline-block;margin-top:.6rem;font-size:.58rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--accent);border-bottom:1px solid transparent;transition:border-color .2s;}
+.work-post-card:hover .work-post-read{border-color:var(--accent);}
+.work-post-list{display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:center;
+  background:var(--card);border:2px solid var(--nav-border);border-bottom:none;
+  padding:1.2rem 1.5rem;transition:border-color .2s;cursor:pointer;}
+.work-post-list:last-child{border-bottom:2px solid var(--nav-border);}
+.work-post-list:hover{border-color:var(--accent);}
+.work-post-list-right{text-align:right;flex-shrink:0;}
 /* expand affordance on cards */
 .work-expand-btn{display:block;width:100%;background:none;border:none;
   border-top:1px solid var(--border);padding:.38rem .85rem;
@@ -1766,7 +1785,43 @@ function workExtras(w){
   return out;
 }
 
+function workPostMasonryCard(w){
+  const p=D.posts.find(x=>x.id===w.postId);
+  const tags=(w.tags||[]).map(t=>`<span class="work-tag">${esc(t)}</span>`).join('');
+  const excerpt=w.desc||(p&&p.excerpt)||'';
+  const safePostId=(w.postId||'').replace(/'/g,"\'");
+  return `<div class="work-post-card" onclick="openPost('${safePostId}')">
+    <div class="work-post-card-body">
+      ${w.type?`<div class="work-type-tag">${esc(w.type)}</div>`:'<div class="work-type-tag">Blog Post</div>'}
+      <div class="work-title" style="font-family:var(--hf);font-size:1.1rem;font-weight:800;letter-spacing:-.02em;line-height:1.15;margin:.2rem 0 0">${esc(w.title||'Untitled')}</div>
+      ${excerpt?`<div class="work-desc" style="font-size:.74rem;line-height:1.75;color:var(--muted);margin-top:.35rem">${esc(excerpt)}</div>`:''}
+      ${tags?`<div class="work-tags" style="margin-top:.5rem">${tags}</div>`:''}
+      <span class="work-post-read">Read post &rarr;</span>
+    </div>
+  </div>`;
+}
+
+function workPostListItem(w){
+  const p=D.posts.find(x=>x.id===w.postId);
+  const tags=(w.tags||[]).map(t=>`<span class="work-tag">${esc(t)}</span>`).join('');
+  const excerpt=w.desc||(p&&p.excerpt)||'';
+  const safeId=(w.postId||'').replace(/'/g,"\'");
+  return `<div class="work-post-list" onclick="openPost('${safeId}')">
+    <div>
+      ${w.type?`<div class="work-type-tag">${esc(w.type)}</div>`:'<div class="work-type-tag">Blog Post</div>'}
+      <div class="work-title" style="font-size:1.15rem">${esc(w.title||'Untitled')}</div>
+      ${excerpt?`<div class="work-desc" style="font-size:.74rem;margin-top:.3rem">${esc(excerpt)}</div>`:''}
+      ${tags?`<div class="work-tags" style="margin-top:.4rem">${tags}</div>`:''}
+    </div>
+    <div class="work-post-list-right">
+      ${w.year?`<div class="work-year">${esc(w.year)}</div>`:''}
+      <div class="work-post-read" style="margin-top:.4rem">Read &rarr;</div>
+    </div>
+  </div>`;
+}
+
 function workMasonryCard(w){
+  if(w.mediaType==='post') return workPostMasonryCard(w);
   const tags=(w.tags||[]).map(t=>`<span class="work-tag">${esc(t)}</span>`).join('');
   const canExpand=w.mediaType==='image'&&w.image||w.mediaType==='pdf'&&w.pdfData;
   const mediaHTML=workMediaPreview(w,false);
@@ -1793,6 +1848,7 @@ function workMasonryCard(w){
 }
 
 function workListItem(w){
+  if(w.mediaType==='post') return workPostListItem(w);
   const tags=(w.tags||[]).map(t=>`<span class="work-tag">${esc(t)}</span>`).join('');
   const canExpand=w.mediaType==='image'&&w.image||w.mediaType==='pdf'&&w.pdfData;
   const hasThumbLink=w.mediaType==='link'&&w.thumbnail&&w.link;
