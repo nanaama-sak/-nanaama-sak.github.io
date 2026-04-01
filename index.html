@@ -423,18 +423,18 @@ nav{background:var(--nav-bg);color:var(--nav-text);padding:0 2rem;display:flex;a
 .wv-nav-btn:hover{border-color:var(--accent);color:var(--accent);}
 
 /* BLOG POST WIDE CARD — masonry view (Option A: image left, text right) */
-.work-post-card{break-inside:avoid;background:var(--surface);
-  border:2px solid var(--nav-border);border-left:4px solid var(--accent);
-  margin-bottom:1rem;transition:border-color .2s;cursor:pointer;
+.work-post-card{break-inside:avoid;background:var(--border);
+  border:2px solid var(--accent);
+  margin-bottom:1rem;transition:border-color .2s,transform .2s;cursor:pointer;
   display:inline-block;width:100%;}
-.work-post-card:hover{border-color:var(--accent);}
+.work-post-card:hover{border-color:var(--accent2);transform:translateX(4px);}
 .work-post-card-img{display:none;}
 .work-post-card-img-ph{display:none;}
 .work-post-card-body{padding:.75rem .9rem;}
-.work-post-card-body .work-type-tag{font-size:.5rem;}
+.work-post-card-body .work-type-tag{font-size:.5rem;color:var(--accent);}
 .work-post-card-body .work-title{font-family:var(--hf);font-size:1.1rem;font-weight:800;
-  letter-spacing:-.02em;line-height:1.15;margin:.2rem 0 0;}
-.work-post-card-body .work-desc{font-size:.74rem;line-height:1.75;color:var(--muted);margin-top:.35rem;}
+  letter-spacing:-.02em;line-height:1.15;margin:.2rem 0 0;color:var(--text);}
+.work-post-card-body .work-desc{font-size:.74rem;line-height:1.75;color:var(--accent);opacity:.8;margin-top:.35rem;}
 .work-post-read{display:inline-block;margin-top:.6rem;font-size:.58rem;letter-spacing:.12em;
   text-transform:uppercase;color:var(--accent);border-bottom:1px solid transparent;transition:border-color .2s;}
 .work-post-card:hover .work-post-read{border-color:var(--accent);}
