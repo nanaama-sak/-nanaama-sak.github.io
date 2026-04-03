@@ -447,6 +447,13 @@ nav{background:var(--nav-bg);color:var(--nav-text);padding:0 2rem;display:flex;a
 .work-post-list-right{text-align:right;flex-shrink:0;}
 @media(max-width:500px){.work-post-list{grid-template-columns:1fr;gap:.5rem;}
   .work-post-list-right{text-align:left;}}
+.home-btns{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.5rem;}
+.home-btn{font-family:var(--bf);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;
+  padding:.65rem 1.4rem;border:2px solid var(--nav-border);background:none;color:var(--text);
+  cursor:pointer;text-decoration:none;display:inline-block;transition:all .18s;}
+.home-btn:hover{background:var(--accent);border-color:var(--accent);color:#fff;text-decoration:none;}
+.home-btn.primary{background:var(--nav-border);color:var(--bg);}
+.home-btn.primary:hover{background:var(--accent);border-color:var(--accent);}
 .home-blocks{max-width:920px;margin:0 auto;padding:0 2rem 3rem;}
 .home-block{margin-bottom:2.2rem;}
 .home-block-heading{font-family:var(--hf);font-size:1.6rem;font-weight:800;letter-spacing:-.02em;margin-bottom:.6rem;}
@@ -708,15 +715,16 @@ function homeHTML(){
       <img id="hero-img" src="${p.profilePhoto||''}" alt="" style="${p.profilePhoto?'':'display:none'}">
     </div>
   </div>
-  <div class="section-wrap">
-    <div class="section-header"><h2>Recent Posts</h2><span class="section-sub">All work</span></div>
-    <div id="posts-home"></div>
-  </div>
-  ${D.homeBlocks&&D.homeBlocks.length?`<div class="home-blocks">${D.homeBlocks.map(b=>
-    b.type==='heading'
-      ?`<div class="home-block"><div class="home-block-heading">${esc(b.heading||'')}</div>${b.text?`<p class="home-block-text">${esc(b.text)}</p>`:''}</div>`
-      :`<div class="home-block"><p class="home-block-text">${esc(b.text||'')}</p></div>`
-  ).join('')}</div>`:''}
+  ${D.homeBlocks&&D.homeBlocks.length?`<div class="home-blocks">${D.homeBlocks.map(b=>{
+    if(b.type==='heading') return `<div class="home-block"><div class="home-block-heading">${esc(b.heading||'')}</div>${b.text?`<p class="home-block-text">${esc(b.text)}</p>`:''}</div>`;
+    if(b.type==='text') return `<div class="home-block"><p class="home-block-text">${esc(b.text||'')}</p></div>`;
+    if(b.type==='buttons') return `<div class="home-block"><div class="home-btns">${(b.buttons||[]).map(btn=>{
+      const isExt=btn.url&&btn.url.startsWith('http');
+      if(isExt) return `<a href="${esc(btn.url)}" target="_blank" rel="noopener" class="home-btn${btn.primary?' primary':''}">${esc(btn.label)}</a>`;
+      return `<button class="home-btn${btn.primary?' primary':''}" onclick="showById('${esc(btn.url)}')">${esc(btn.label)}</button>`;
+    }).join('')}</div></div>`;
+    return '';
+  }).join('')}</div>`:''}
   `;
 }
 
