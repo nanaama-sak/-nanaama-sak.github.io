@@ -2230,6 +2230,7 @@ function renderTabsEditor(){
       <div class="tab-body">
         <label>Tab Name</label>
         <input type="text" id="tn-${tab.id}" value="${esc(tab.name)}">
+        <p class="notice" style="margin-top:.25rem">Page ID: <code style="font-family:var(--bf);background:var(--surface);padding:.1rem .35rem;font-size:.72rem;user-select:all">${tab.id}</code> — copy this to use in home page buttons</p>
         ${tab.type!=='home'?`
           <label>Subtitle</label>
           <input type="text" id="ts-${tab.id}" value="${esc(tab.sub||'')}">
