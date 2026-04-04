@@ -1197,14 +1197,17 @@ function workListItem(w){
   const tags=(w.tags||[]).map(t=>`<span class="work-tag">${esc(t)}</span>`).join('');
   const canExpand=w.mediaType==='image'&&w.image||w.mediaType==='pdf'&&w.pdfData;
   const hasThumbLink=w.mediaType==='link'&&w.thumbnail&&w.link;
-  const previewInner=w.mediaType==='image'&&w.image?
-    `<img src="${w.image}" alt="${esc(w.title||'')}">`:
-    w.mediaType==='link'&&w.thumbnail?
-    `<img src="${w.thumbnail}" alt="${esc(w.title||'')}">`:
-    `<div class="work-list-preview-ph">${workMediaPreview(w,true)}</div>`;
+  // image always wins; fall back to accent-fill + icon
+  const hasImg=w.image||(w.mediaType==='link'&&w.thumbnail);
+  const icons={soundcloud:'♪',bandcamp:'♫',spotify:'▶',youtube:'▶',link:'↗',pdf:'📎',image:'◻'};
+  const icon=icons[w.mediaType]||'○';
+  const previewInner=hasImg
+    ?`<img src="${w.image||w.thumbnail}" alt="${esc(w.title||'')}">`
+    :`<span style="font-size:1.8rem;color:#fff;opacity:.75">${icon}</span>`;
+  const previewBg=hasImg?'':'background:var(--accent);';
   const previewCls=canExpand?'work-list-preview clickable':hasThumbLink?'work-list-preview clickable':'work-list-preview';
-  const previewClick=canExpand?`onclick="openWorkViewer('${w.id}')" style="cursor:zoom-in"`:
-    hasThumbLink?`onclick="window.open('${esc(w.link)}','_blank')" style="cursor:pointer"`:''  ;
+  const previewClick=canExpand?`onclick="openWorkViewer('${w.id}')" style="cursor:zoom-in;${previewBg}"`:
+    hasThumbLink?`onclick="window.open('${esc(w.link)}','_blank')" style="cursor:pointer;${previewBg}"`:`style="${previewBg}"`;
   const isEmbed=['soundcloud','bandcamp','spotify','youtube'].includes(w.mediaType)&&w.embedUrl;
   return `<div class="work-list-item">
     <div class="${previewCls}" ${previewClick}>${previewInner}</div>
